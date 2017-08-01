@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 1997-2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2017 Oracle and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -47,16 +47,21 @@ import java.lang.annotation.Target;
 import java.lang.annotation.Retention;
 
 /**
- * <p>Used to exclude class-level interceptors for a 
- * lifecycle callback, business, or timeout method of a target class,
- * or a constructor of a target class.</p>
+ * <p>Used to exclude class-level interceptors for the 
+ * lifecycle callback method, business method, timeout method, 
+ * or constructor to which it is applied.</p>
  * 
+ * <p>Excludes interceptors defined by means of the 
+ * {@link javax.interceptor.Interceptors} annotation.
+ * Use of this annotation to exclude interceptors defined by means
+ * of interceptor binding annotations is not portable.</p>
+ *
  * <pre>
  * &#064;ExcludeClassInterceptors
  * public void updateOrder(Order order) { ... }
  * </pre>
  * 
- * @see javax.interceptor.ExcludeClassInterceptors
+ * @see javax.interceptor.ExcludeDefaultInterceptors
  *
  * @since Interceptors 1.0
  */

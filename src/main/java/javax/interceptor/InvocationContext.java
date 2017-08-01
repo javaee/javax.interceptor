@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 1997-2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2017 Oracle and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -45,8 +45,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * <p>Exposes context information about the intercepted invocation and operations 
- * that enable interceptor methods to control the behavior of the invocation chain.</p>
+ * <p>Exposes contextual information about the intercepted invocation and
+ * operations that enable interceptor methods to control the behavior 
+ * of the invocation chain.</p>
  * 
  * <pre>
  *
@@ -74,8 +75,8 @@ import java.util.Map;
 public interface InvocationContext {
 
     /**
-     * Returns the target instance. For the {@link AroundConstruct} lifecycle callback 
-     * interceptor method, the <tt>getTarget</tt> returns <code>null</code> 
+     * Returns the target instance. For {@link AroundConstruct} lifecycle callback 
+     * interceptor methods, the <tt>getTarget</tt> method returns <code>null</code> 
      * if called before the {@link #proceed} method.
      * 
      * @return the target instance
@@ -84,9 +85,10 @@ public interface InvocationContext {
 
     /**
      * Returns the timer object associated with a timeout
-     * method invocation on the target class, or a null value for method
-     * and lifecycle callback interceptor methods.  For example, when associated
-     * with an EJB component timeout, this method returns {@link javax.ejb.Timer}
+     * method invocation on the target class, or a null value for 
+     * interceptor method types other than {@link AroundTimeout}.
+     * For example, when associated with an EJB component timeout, this 
+     * method returns {@link javax.ejb.Timer}.
      * 
      * @return the timer object or a null value
      *
@@ -96,20 +98,20 @@ public interface InvocationContext {
 
     /**
      * Returns the method of the target class for which the interceptor
-     * was invoked. In a lifecycle callback interceptor for which there is no 
-     * corresponding lifecycle callback method on the target class or in the 
-     * {@link AroundConstruct} lifecycle callback interceptor method, 
-     * <code>getMethod</code> returns null.
+     * was invoked. Returns null in a lifecycle callback interceptor 
+     * for which there is no  corresponding lifecycle callback method 
+     * declared in the target class (or inherited from a superclass) 
+     * or in an {@link AroundConstruct} lifecycle callback interceptor method.
      * 
      * @return the method, or a null value
      */
     public Method getMethod();
 
     /**
-     * Returns the constructor of the target class for which the interceptor
-     * was invoked.  For {@link AroundConstruct} interceptor, the constructor of the 
-     * target class is returned. For all other interceptors, 
-     * a null value is returned.
+     * Returns the constructor of the target class for which the 
+     * {@link AroundConstruct} interceptor method was invoked.  
+     * Returns null for interceptor method types other than
+     * {@link AroundConstruct} interceptor methods.
      * 
      * @return the constructor, or a null value
      */
@@ -124,7 +126,7 @@ public interface InvocationContext {
      * @return the parameter values, as an array
      * 
      * @exception java.lang.IllegalStateException if invoked within
-     * a lifecycle callback method which is not an {@link AroundConstruct} callback.
+     * a lifecycle callback method that is not an {@link AroundConstruct} callback.
      */
     public Object[] getParameters();
     
@@ -133,7 +135,7 @@ public interface InvocationContext {
      * constructor of the target class.  
      *
      * @exception java.lang.IllegalStateException if invoked within
-     * a lifecycle callback method which is not an {@link AroundConstruct} callback.
+     * a lifecycle callback method that is not an {@link AroundConstruct} callback.
      *
      * @exception java.lang.IllegalArgumentException if the types of the 
      * given parameter values do not match the types of the method or constructor
@@ -148,10 +150,10 @@ public interface InvocationContext {
 
     /**
      * Enables an interceptor to retrieve or update the data associated with 
-     * the invocation by another interceptor, business method,and/or webservices 
-     * context in the invocation chain.  If interceptors are invoked as a result
-     * of the invocation on a web service endpoint, the returned value will be 
-     * an instance of javax.xml.rpc.handler.MessageContext
+     * the invocation by another interceptor, business method, and/or 
+     * webservices endpoint in the invocation chain.  If interceptors 
+     * are invoked as a result of the invocation on a web service endpoint, 
+     * the returned value will be an instance of <code>javax.xml.rpc.handler.MessageContext</code>.
      * 
      * @return the context data associated with this invocation or
      * lifecycle callback.  If there is no context data, an
@@ -162,15 +164,16 @@ public interface InvocationContext {
     public Map<String, Object> getContextData();
 
     /**
-     * Proceed to the next interceptor in the interceptor chain. For the 
-     * around-invoke or around-timeout interceptor methods, the invocation of the 
-     * last interceptor method in the chain causes the invocation of the target 
-     * class method. For {@link AroundConstruct} lifecycle callback interceptor 
-     * methods, the invocation of the last interceptor method in the chain causes 
+     * Proceed to the next interceptor in the interceptor chain. For  
+     * around-invoke or around-timeout interceptor methods, the invocation of
+     * {@code proceed} in the  last interceptor method in the chain causes 
+     * the invocation of the target class method. For {@link AroundConstruct} 
+     * lifecycle callback interceptor methods, the invocation of 
+     * {@code proceed} in the last interceptor method in the chain causes 
      * the target instance to be created. For all other lifecycle callback 
-     * interceptor methods, if there is no callback method defined on the target 
-     * class, the invocation of proceed in the last interceptor method in the chain 
-     * is a no-op
+     * interceptor methods, if there is no callback method defined on the 
+     * target class, the invocation of proceed in the last interceptor method 
+     * in the chain is a no-op.
      *
      * <p>Return the result of the next method invoked, or a null 
      * value if the method has return type void.
@@ -178,6 +181,8 @@ public interface InvocationContext {
      * <p>
      * 
      * @return the return value of the next method in the chain
+     *
+     * @exception Exception if thrown by target method or interceptor method in call stack
      */
     public Object proceed() throws Exception;
 

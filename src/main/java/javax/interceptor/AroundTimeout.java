@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 1997-2010 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997-2017 Oracle and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -48,17 +48,21 @@ import java.lang.annotation.Retention;
 
 /**
  * <p>Defines an interceptor method that interposes on timeout methods.
- * May be applied to any non-final, non-static method with a single 
- * parameter of type {@link javax.interceptor.InvocationContext} and
- * return type {@link java.lang.Object} of the target class 
- * (or superclass) or of any interceptor class.</p>
+ * The method must take a single parameter of type 
+ * {@link javax.interceptor.InvocationContext} and have a return type
+ * {@link java.lang.Object}.  The method must not be declared as abstract,
+ * final, or static.</p>
  * 
  * <pre>
  * &#064;AroundTimeout
  * public Object interceptTimeout(InvocationContext ctx) throws Exception { ... }
  * </pre>
  * 
- * <p>A class must not declare more than one <tt>AroundTimeout</tt> 
+ * <p><tt>AroundTimeout</tt> methods may be declared in interceptor
+ * classes, in the superclasses of interceptor classes, in the target
+ * class, and/or in superclasses of the target class.</p>
+ *
+ * <p>A given class must not declare more than one <tt>AroundTimeout</tt> 
  * method.</p>
  * 
  * <p>An <tt>AroundTimeout</tt> method can invoke any component or 
@@ -68,9 +72,9 @@ import java.lang.annotation.Retention;
  * <tt>AroundTimeout</tt> method to retrieve the timer object 
  * associated with the timeout.</p>
  * 
- * <p><tt>AroundTimeout</tt> method invocations occur within the same 
- * transaction and security context as the timeout method on which they are 
- * interposing.</p>
+ * <p>In general, <tt>AroundTimeout</tt> method invocations occur within the 
+ * same transaction and security context as the timeout method on which they 
+ * are interposing.</p>
  * 
  * <p><tt>AroundTimeout</tt> methods may throw any exceptions that are 
  * allowed by the throws clause of the timeout method on which they are 

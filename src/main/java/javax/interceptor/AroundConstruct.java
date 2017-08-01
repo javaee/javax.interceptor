@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2013 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013-2017 Oracle and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -49,35 +49,35 @@ import java.lang.annotation.RetentionPolicy;
  * <p>Designates an interceptor method that receives a callback when
  * the target class constructor is invoked.
  * </p>
- * <p>The method to which this annotation is applied must have one of the 
+ * <p>The method to which the <tt>AroundConstruct</tt> annotation is applied must have one of the 
  * following signatures.
  * </p>
  * 
  * <pre>
- * &#064;AroundConstruct
- * public void &#060;METHOD&#062;(InvocationContext ctx) { ... }
+ * void &#060;METHOD&#062;(InvocationContext ctx) 
+ *
+ * Object &#060;METHOD&#062;(InvocationContext ctx) 
  * </pre>
  * 
- * <pre>
- * &#064;AroundConstruct
- * public Object &#060;METHOD&#062;(InvocationContext ctx) throws Exception { ... }
- * </pre>
- * 
- * <p>An <tt>AroundConstruct</tt> interceptor method may be only declared on an interceptor class.</p>
+ * <p>The method must not be declared as abstract, final, or static.</p>
+ *
+ * <p>An <tt>AroundConstruct</tt> interceptor method may be only declared in 
+ * an interceptor class or superclass of an interceptor class.</p>
  *
  * <p>An interceptor class must not declare more than one <tt>AroundConstruct</tt> 
  * method.</p>
  * 
- * <p><tt>AroundConstruct</tt> methods may throw runtime exceptions, 
- * but not checked exceptions.
- * </p>
+ * <p> The target instance is created and its constructor injection is 
+ * performed, if applicable,  when the last interceptor method in the 
+ * <tt>AroundConstruct</tt> interceptor chain invokes the 
+ * {@link javax.interceptor.InvocationContext#proceed()} method.
  *
- * <p> The target instance is created and its constructor injection is performed, if applicable, 
- * when the last interceptor method in the <tt>AroundConstruct</tt> interceptor chain invokes 
- * the {@link javax.interceptor.InvocationContext#proceed()} method.
+ * <p>An <tt>AroundConstruct</tt> interceptor method should exercise caution 
+ * accessing the instance whose constructor it interposes on.</p>
  *
- * <p>An <tt>AroundConstruct</tt> interceptor method should exercise caution accessing the instance which 
- * constructor it interposes on.</p>
+ * <p><tt>AroundConstruct</tt> methods may throw any exceptions that are 
+ * allowed by the throws clause of the constructor on which they are 
+ * interposing.</p>
  *
  * @since Interceptors 1.2 
  */
